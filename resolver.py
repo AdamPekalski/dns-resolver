@@ -1,5 +1,5 @@
 import random
-
+import socket
 from DNSStarter import DNSHeader, DNSQuestion, DNSDatagram, write_datagram
 
 
@@ -43,11 +43,22 @@ def build_query(domain, qtype):
     )
 
 
+def send_query(query):
+    raw_query = write_datagram(query)
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    sock.sendto(raw_query, (DNS_SERVER, 53))
+
+    response, _ = sock.recvfrom(512)
+
+    sock.close()
+
+    return response
+
+
 query = build_query("google.com", 1)
 
-raw_query = write_datagram(query)
+response = send_query(query)
 
-print(query.header.ident)
-print(query.questions[0].name)
-print(query.questions[0].qtype)
-print(raw_query)
+print(response)
