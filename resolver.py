@@ -1,6 +1,8 @@
 import random
 import socket
-from DNSStarter import DNSHeader, DNSQuestion, DNSDatagram, write_datagram
+from DNSStarter import (
+    DNSHeader, DNSQuestion, DNSDatagram, write_datagram, read_datagram,
+    )
 
 
 # DNS server used by this resolver.
@@ -61,4 +63,9 @@ query = build_query("google.com", 1)
 
 response = send_query(query)
 
-print(response)
+datagram = read_datagram(response)
+
+print("Transaction ID:", datagram.header.ident)
+print("QR:", datagram.header.qr)
+print("Response code:", datagram.header.rcode)
+print("Answer count:", datagram.header.ancount)
