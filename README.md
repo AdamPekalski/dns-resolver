@@ -10,7 +10,14 @@ DNS starter code.
 - Project setup complete
 - DNS query construction implemented
 - DNS query serialization implemented
+- UDP DNS communication implemented
+- DNS response parsing implemented
+- IPv4 A record resolution implemented
+- Command-line domain input implemented
 
-## DNS Server
+## Usage
 
-The DNS server used by the resolver is configured in `resolver.py`.
+Run the resolver with:
+
+```bash
+python resolver.py <domain>
