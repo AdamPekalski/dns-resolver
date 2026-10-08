@@ -1,5 +1,6 @@
 import random
 import socket
+import sys
 from DNSStarter import (
     DNSHeader, DNSQuestion, DNSDatagram, write_datagram, read_datagram,
     )
@@ -63,8 +64,14 @@ def format_ipv4(rdata):
     return ".".join(str(byte) for byte in rdata)
 
 
+#not required by the assignment, added for testing purposes
+if len(sys.argv) != 2:
+    print("Usage: python resolver.py <domain>")
+    sys.exit(1)
 
-query = build_query("google.com", 1)
+domain = sys.argv[1]
+
+query = build_query(domain, 1)
 
 response = send_query(query)
 
@@ -75,7 +82,8 @@ print("QR:", datagram.header.qr)
 print("Response code:", datagram.header.rcode)
 print("Answer count:", datagram.header.ancount)
 
+print("\nList of addresses for", domain, ":")
 for answer in datagram.answers:
     if answer.type == 1:
-        print("\nIPv4:", format_ipv4(answer.rdata))
+        print("IPv4:", format_ipv4(answer.rdata))
     
