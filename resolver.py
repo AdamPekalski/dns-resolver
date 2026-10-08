@@ -59,6 +59,11 @@ def send_query(query):
     return response
 
 
+def format_ipv4(rdata):
+    return ".".join(str(byte) for byte in rdata)
+
+
+
 query = build_query("google.com", 1)
 
 response = send_query(query)
@@ -69,3 +74,8 @@ print("Transaction ID:", datagram.header.ident)
 print("QR:", datagram.header.qr)
 print("Response code:", datagram.header.rcode)
 print("Answer count:", datagram.header.ancount)
+
+for answer in datagram.answers:
+    if answer.type == 1:
+        print("\nIPv4:", format_ipv4(answer.rdata))
+    
