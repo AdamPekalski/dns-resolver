@@ -64,11 +64,13 @@ def send_query(query):
 def format_ipv4(rdata):
     return ".".join(str(byte) for byte in rdata)
 
+
 def format_ipv6(rdata):
     return str(ipaddress.IPv6Address(bytes(rdata)))
 
 
 #not required by the assignment, added for testing purposes
+#check that exactly one domain was provided
 if len(sys.argv) != 2:
     print("Usage: python resolver.py <domain>")
     sys.exit(1)
