@@ -91,6 +91,11 @@ for answer in datagram.answers:
     if answer.type == 1:
         print("IPv4:", format_ipv4(answer.rdata))
 
+    elif answer.type == 5:
+        cname_labels = answer.cname_as_array_list(datagram)
+        cname = ".".join(cname_labels)
+        print("CNAME:", cname)
+
 
 ipv6_query = build_query(domain, 28)
 
