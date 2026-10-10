@@ -1,6 +1,7 @@
 import random
 import socket
 import sys
+import ipaddress
 from DNSStarter import (
     DNSHeader, DNSQuestion, DNSDatagram, write_datagram, read_datagram,
     )
@@ -63,6 +64,9 @@ def send_query(query):
 def format_ipv4(rdata):
     return ".".join(str(byte) for byte in rdata)
 
+def format_ipv6(rdata):
+    return str(ipaddress.IPv6Address(bytes(rdata)))
+
 
 #not required by the assignment, added for testing purposes
 if len(sys.argv) != 2:
@@ -82,8 +86,19 @@ print("QR:", datagram.header.qr)
 print("Response code:", datagram.header.rcode)
 print("Answer count:", datagram.header.ancount)
 
-print("\nList of addresses for", domain, ":")
+print("\nList of IPv4 addresses for", domain, ":")
 for answer in datagram.answers:
     if answer.type == 1:
         print("IPv4:", format_ipv4(answer.rdata))
-    
+
+
+ipv6_query = build_query(domain, 28)
+
+ipv6_response = send_query(ipv6_query)
+
+ipv6_datagram = read_datagram(ipv6_response)
+
+print("\nList of IPv6 addresses for", domain, ":")
+for answer in ipv6_datagram.answers:
+    if answer.type == 28:
+        print("IPv6:", format_ipv6(answer.rdata))
