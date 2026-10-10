@@ -81,20 +81,34 @@ response = send_query(query)
 
 datagram = read_datagram(response)
 
-print("Transaction ID:", datagram.header.ident)
-print("QR:", datagram.header.qr)
-print("Response code:", datagram.header.rcode)
-print("Answer count:", datagram.header.ancount)
+if datagram.header.rcode != 0:
+    print("DNS lookup failed. Response code:", datagram.header.rcode)
+    sys.exit(1)
 
-print("\nList of IPv4 addresses for", domain, ":")
-for answer in datagram.answers:
-    if answer.type == 1:
-        print("IPv4:", format_ipv4(answer.rdata))
+cname_answers = [
+    answer for answer in datagram.answers
+    if answer.type == 5
+]
 
-    elif answer.type == 5:
+ipv4_answers = [
+    answer for answer in datagram.answers
+    if answer.type == 1
+]
+
+if cname_answers:
+    print("\nCanonical names for", domain, ":")
+
+    for answer in cname_answers:
         cname_labels = answer.cname_as_array_list(datagram)
         cname = ".".join(cname_labels)
         print("CNAME:", cname)
+
+if ipv4_answers:
+    print("\nIPv4 addresses for", domain, ":")
+
+    for answer in ipv4_answers:
+        print("IPv4:", format_ipv4(answer.rdata))
+
 
 
 ipv6_query = build_query(domain, 28)
@@ -103,7 +117,16 @@ ipv6_response = send_query(ipv6_query)
 
 ipv6_datagram = read_datagram(ipv6_response)
 
-print("\nList of IPv6 addresses for", domain, ":")
-for answer in ipv6_datagram.answers:
-    if answer.type == 28:
+if ipv6_datagram.header.rcode != 0:
+    print("IPv6 DNS lookup failed. Response code:", ipv6_datagram.header.rcode)
+
+ipv6_answers = [
+    answer for answer in ipv6_datagram.answers
+    if answer.type == 28
+]
+
+if ipv6_answers:
+    print("\nIPv6 addresses for", domain, ":")
+
+    for answer in ipv6_answers:
         print("IPv6:", format_ipv6(answer.rdata))

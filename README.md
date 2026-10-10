@@ -21,24 +21,18 @@ DNS starter code.
 
 The resolver currently displays:
 
-- Transaction ID
-- QR flag
-- Response code
-- Answer count
+- Canonical names from CNAME records
 - IPv4 addresses from A records
 - IPv6 addresses from AAAA records
-- Canonical names from CNAME records
+- Basic DNS error message upon a failed lookup
 
 ### Example
 
 ```text
-Transaction ID: 16971
-QR: 1
-Response code: 0
-Answer count: 3
-
-List of IPv4 addresses for www.tudublin.ie :
+Canonical names for www.tudublin.ie :
 CNAME: tudublinie-lb01-production.terminalfour.net
+
+IPv4 addresses for www.tudublin.ie :
 IPv4: 52.17.166.15
 IPv4: 63.32.192.231
 
